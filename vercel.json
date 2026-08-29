@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/sub/:path*",
+      "destination": "https://ORIGIN_DOMAIN/sub/:path*"
+    }
+  ]
+}
