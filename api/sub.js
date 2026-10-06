@@ -1,15 +1,16 @@
 import https from "https";
 
 export default async function handler(req, res) {
-  const path = req.query.path || "";
+  const path = req.url.split("?")[0].replace(/^\/api\/sub/, "");
 
   const options = {
     hostname: "167.233.65.127",
     port: 443,
-    path: `/sub/${path}`,
-    method: "GET",
+    path: `/sub${path}`,
+    method: req.method,
     headers: {
-      Host: "origin.speedest.sbs"
+      ...req.headers,
+      host: "origin.speedest.sbs"
     },
     servername: "origin.speedest.sbs",
     rejectUnauthorized: false
