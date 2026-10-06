@@ -1,20 +1,33 @@
+import https from "https";
+
 export default async function handler(req, res) {
-  try {
-    const path = req.query.path || "";
-    const url = `https://origin.speedest.sbs/sub/${path}`;
+  const path = req.query.path || "";
 
-    const response = await fetch(url);
+  const options = {
+    hostname: "167.233.65.127",
+    port: 443,
+    path: `/sub/${path}`,
+    method: "GET",
+    headers: {
+      Host: "origin.speedest.sbs"
+    },
+    servername: "origin.speedest.sbs",
+    rejectUnauthorized: false
+  };
 
-    const body = await response.arrayBuffer();
+  const request = https.request(options, response => {
+    res.status(response.statusCode);
 
-    res.status(response.status);
-    res.setHeader(
-      "content-type",
-      response.headers.get("content-type") || "text/plain"
-    );
+    Object.entries(response.headers).forEach(([key, value]) => {
+      if (value) res.setHeader(key, value);
+    });
 
-    res.send(Buffer.from(body));
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
+    response.pipe(res);
+  });
+
+  request.on("error", error => {
+    res.status(502).send(error.message);
+  });
+
+  request.end();
 }
