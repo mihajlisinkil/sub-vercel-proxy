@@ -1,15 +1,20 @@
 export default async function handler(req, res) {
-  const path = req.url.replace(/^\/api\/sub/, "");
-  const target = `https://origin.speedest.sbs/sub${path}`;
+  try {
+    const path = req.query.path || "";
+    const url = `https://origin.speedest.sbs/sub/${path}`;
 
-  const response = await fetch(target);
+    const response = await fetch(url);
 
-  res.status(response.status);
+    const body = await response.arrayBuffer();
 
-  response.headers.forEach((value, key) => {
-    res.setHeader(key, value);
-  });
+    res.status(response.status);
+    res.setHeader(
+      "content-type",
+      response.headers.get("content-type") || "text/plain"
+    );
 
-  const body = Buffer.from(await response.arrayBuffer());
-  res.send(body);
+    res.send(Buffer.from(body));
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 }
