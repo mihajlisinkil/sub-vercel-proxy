@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/sub/:path*",
-      "destination": "https://origin.speedest.sbs/sub/:path*"
+      "destination": "/api/sub?path=:path*"
     }
   ]
 }
