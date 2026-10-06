@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/sub/:path*",
-      "destination": "/api/sub?path=:path*"
+      "destination": "/api/sub?path=/$1"
     }
   ]
 }
